@@ -26,10 +26,10 @@ public class ItemController {
 
     @Autowired
     private ItemService itemService;
-    private final String USER_ID = "X-Sharer-User-Id";
+    private final String userId = "X-Sharer-User-Id";
 
     @PostMapping
-    public ItemDto create(@RequestHeader(USER_ID) Long userId, @RequestBody ItemDto itemDto) throws BadRequestException {
+    public ItemDto create(@RequestHeader(userId) Long userId, @RequestBody ItemDto itemDto) throws BadRequestException {
         log.info("Получили данные для создания предмета {} у пользователя по id {}", itemDto, userId);
         return itemService.create(userId, itemDto);
     }
@@ -42,13 +42,13 @@ public class ItemController {
 
 
     @PatchMapping("/{item-id}")
-    public ItemDto update(@RequestHeader(USER_ID) Long userId, @PathVariable("item-id") Long itemId, @RequestBody ItemDto itemDto) {
+    public ItemDto update(@RequestHeader(userId) Long userId, @PathVariable("item-id") Long itemId, @RequestBody ItemDto itemDto) {
         log.info("Переданы данные на редактировние предмета по id: {}, пользователя по id: {}, данные {}", userId, itemId, itemDto);
         return itemService.update(userId, itemId, itemDto);
     }
 
     @GetMapping
-    public List<ItemDto> getOwnerItems(@RequestHeader(USER_ID) Long userId) {
+    public List<ItemDto> getOwnerItems(@RequestHeader(userId) Long userId) {
         log.info("Получаем список предметов по юзеру с id {}", userId);
         return itemService.getOwnerItems(userId);
     }
