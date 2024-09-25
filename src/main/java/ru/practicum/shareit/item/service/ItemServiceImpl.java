@@ -92,7 +92,7 @@ public class ItemServiceImpl implements ItemService {
 
     private void checkItemById(Long itemId) {
         if (itemRepository.getById(itemId) == null) {
-            throw new NotFoundException("Предмета по id " + itemId + " не существует");
+            throw new NotFoundException("Предмета по id не существует");
         }
     }
 

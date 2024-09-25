@@ -1,11 +1,15 @@
 package ru.practicum.shareit.exception;
 
+import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NonNull;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ErrorResponse {
-    @NonNull
-    private String error;
-    private String description;
+    @NotBlank
+    String error;
+    String description;
 }
