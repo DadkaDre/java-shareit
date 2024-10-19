@@ -20,5 +20,4 @@ public interface UserService {
 
     User getOwner(Long id);
 
-
 }
