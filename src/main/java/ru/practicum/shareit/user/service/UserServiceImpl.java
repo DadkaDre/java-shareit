@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto update(Long id, UserDto userDto) {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id: " + id));
 
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getById(Long id) {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id: " + id));
         return UserMapper.toUserDto(user);
     }
 
@@ -60,13 +60,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Long id) {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id: " + id));
         userRepository.deleteById(user.getId());
     }
 
     public User getOwner(Long id) {
 
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id"));
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Нет пользователя с таким id: " + id));
     }
 
 }

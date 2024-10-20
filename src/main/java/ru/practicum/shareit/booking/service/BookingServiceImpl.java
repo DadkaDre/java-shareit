@@ -37,9 +37,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingInfoDto create(Long userId, BookingDto bookingDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Нет такого пользователя"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Нет такого пользователя по id: " + userId));
 
-        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new NotFoundException("Нет такого предмета"));
+        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new NotFoundException("Нет такого предмета по id " + bookingDto.getItemId()));
         if (!dto.isBeforeEnd(bookingDto)) {
             throw new BadRequestException("Вещь забронирована");
         }
@@ -55,7 +55,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingInfoDto approved(Long userId, Long bookingId, boolean approved) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Нет такого бронирования"));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Нет такого бронирования по id " + bookingId));
         if (!(userId.equals(booking.getItem().getOwner().getId()))) {
             throw new BadRequestException("Только собственник может подтвердить бронирование");
         }
@@ -73,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public BookingInfoDto getById(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Нет такого бронирования"));
+                .orElseThrow(() -> new NotFoundException("Нет такого бронирования по id " + bookingId));
         if (!(userId.equals(booking.getBooker().getId())) && !(userId.equals(booking.getItem().getOwner().getId()))) {
             throw new BadRequestException("Просматривать info может владелец вещи или создатель брони");
         }
@@ -96,7 +96,7 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE -> bookingRepository.getAllByBookerIdAndFutureTime(userId);
             case WAITING -> bookingRepository.getAllByBookerIdAndStatusIs(userId, Status.WAITING);
             case REJECTED -> bookingRepository.getAllByBookerIdAndStatusIs(userId, Status.REJECTED);
-            default -> throw new BadRequestException("Недопустимое значение state");
+            default -> throw new BadRequestException("Недопустимое значение state %s" + bookingState);
         };
 
         return bookings.stream().map(i -> BookingMapper.toBookingInfoDto(i, i.getBooker(), i.getItem())).toList();
@@ -121,7 +121,7 @@ public class BookingServiceImpl implements BookingService {
             case WAITING -> bookingRepository.findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.WAITING);
             case REJECTED ->
                     bookingRepository.findAllByItemOwnerIdAndStatusIsOrderByStartDesc(ownerId, Status.REJECTED);
-            default -> throw new BadRequestException("Недопустимое значение state");
+            default -> throw new BadRequestException("Недопустимое значение state %s" + bookingState);
         };
 
         return bookings.stream().map(i -> BookingMapper.toBookingInfoDto(i, i.getBooker(), i.getItem())).toList();
@@ -133,7 +133,7 @@ public class BookingServiceImpl implements BookingService {
             if (value.name().equals(state)) {
                 return value;
             } else {
-                throw new BadRequestException("Значение не соответствует допустимому");
+                throw new BadRequestException("Значение не соответствует допустимому %s " + state);
             }
         }
         return null;

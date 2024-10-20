@@ -60,7 +60,7 @@ public class ItemServiceImpl implements ItemService {
         User user = userService.getOwner(userId);
 
         log.info("Проверяем в базе наличие предмета по id {}", itemId);
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет такого предмета"));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет такого предмета с id: " + itemId));
         checkOwner(userId, itemId);
 
         if (itemDto.getName() != null) {
@@ -77,7 +77,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemInfoDto getById(Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет предмета по id"));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет предмета по id:" + itemId));
         Long ownerId = item.getOwner().getId();
         List<Comment> comments = commentRepository.findAllByItemId(item.getId());
         List<Booking> bookings = bookingRepository.findAllByItemIdAndEndBefore(itemId, LocalDateTime.now());
@@ -131,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public CommentInfoDto addComments(Long userId, CommentDto commentDto, Long itemId) {
         User user = UserMapper.toUser(userService.getById(userId));
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет такого предмета в базе"));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет такого предмета по id: " + itemId));
         List<Booking> bookings = bookingRepository.getALLByItemIdAndBookerIdAndStatusIsOrderByEndDesc(itemId, userId, Status.APPROVED);
         if (bookings == null) {
             throw new BadRequestException("Пользователь не бронировал вещь");
@@ -167,7 +167,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkOwner(Long userId, Long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет такого предмета по id"));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Нет такого предмета по id: " + itemId));
         if (!(userId.equals(item.getOwner().getId()))) {
             throw new ForBiddenException("Только собственники предметов имеют доступ");
         }
