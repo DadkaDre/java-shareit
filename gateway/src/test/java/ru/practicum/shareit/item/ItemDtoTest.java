@@ -44,7 +44,7 @@ public class ItemDtoTest {
     @DisplayName("Проверяем десериализацию объекта CommentDto")
     void deserializeJsonTest() throws Exception {
 
-        String json = "{\"id\":1,\"name\":\"Table\",\"description\":\"wood\",\"available\":true,\"requestId\":1}";
+        String json = "{\"id\":1,\"name\":\"Guitar\",\"description\":\"wood\",\"available\":true,\"requestId\":1}";
 
         ItemDto itemDto = objectMapper.readValue(json, ItemDto.class);
         assertThat(itemDto.getName()).isEqualTo("Guitar");
