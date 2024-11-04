@@ -125,10 +125,10 @@ class ItemRequestServiceImplTest {
     @DisplayName("ItemRequestService_create")
     void testCreate() {
 
-        ItemRequestInfoDto ItemRequestInfoDto = new ItemRequestInfoDto();
-        ItemRequestInfoDto.setId(itemRequest1.getId());
-        ItemRequestInfoDto.setDescription(itemRequest1.getDescription());
-        ItemRequestInfoDto.setRequestor(new UserDto(user1.getId(), user1.getName(), user1.getEmail()));
+        ItemRequestInfoDto itemRequestInfoDto = new ItemRequestInfoDto();
+        itemRequestInfoDto.setId(itemRequest1.getId());
+        itemRequestInfoDto.setDescription(itemRequest1.getDescription());
+        itemRequestInfoDto.setRequestor(new UserDto(user1.getId(), user1.getName(), user1.getEmail()));
 
         when(userService.getById(1L)).thenReturn(UserMapper.toUserDto(user1));
         when(itemRequestRepository.save(any(ItemRequest.class))).thenReturn(itemRequest1);
@@ -136,8 +136,8 @@ class ItemRequestServiceImplTest {
         ItemRequestInfoDto actualDto = itemRequestService.create(1L, itemRequestDto1);
 
         assertNotNull(actualDto);
-        assertEquals(ItemRequestInfoDto.getDescription(), actualDto.getDescription());
-        assertEquals(ItemRequestInfoDto.getRequestor().getName(), actualDto.getRequestor().getName());
+        assertEquals(itemRequestInfoDto.getDescription(), actualDto.getDescription());
+        assertEquals(itemRequestInfoDto.getRequestor().getName(), actualDto.getRequestor().getName());
 
         verify(userService).getById(1L);
         verify(itemRequestRepository).save(any(ItemRequest.class));
