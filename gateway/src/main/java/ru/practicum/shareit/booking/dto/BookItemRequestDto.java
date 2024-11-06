@@ -3,10 +3,12 @@ package ru.practicum.shareit.booking.dto;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.group.Marker;
 
 import java.time.LocalDateTime;
@@ -15,16 +17,17 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookItemRequestDto {
 
     @NotNull(groups = Marker.OnCreate.class)
-    private long itemId;
+    long itemId;
 
     @FutureOrPresent(groups = Marker.OnCreate.class)
     @NotNull(groups = Marker.OnCreate.class)
-    private LocalDateTime start;
+    LocalDateTime start;
 
     @Future(groups = Marker.OnCreate.class)
     @NotNull(groups = Marker.OnCreate.class)
-    private LocalDateTime end;
+    LocalDateTime end;
 }
